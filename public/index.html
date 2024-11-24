@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petshop - Encontre seu pet favorito</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Petshop</h1>
+      <h2>Encontre seu pet favorito</h2>
+    </header>
+    <main>
+      <div class="search-box">
+        <input type="text" id="nome" placeholder="Nome do pet">
+        <button onclick="pesquisarPet()">Pesquisar</button>
+      </div>
+      <div id="resultado" class="resultado"></div>
+    </main>
+    <footer>
+      © 2024 Petshop. Todos os direitos reservados.
+    </footer>
+  </div>
+
+  <script>
+    async function pesquisarPet() {
+      const nome = document.getElementById('nome').value;
+      console.log(`Pesquisando por: ${nome}`);
+      try {
+        const response = await fetch(`http://localhost:3000/pets`);
+        const pets = await response.json();
+        const pet = pets.find(p => p.nome.toLowerCase() === nome.toLowerCase());
+        const resultadoDiv = document.getElementById('resultado');
+        if (pet) {
+          resultadoDiv.innerHTML = `
+            <h2>Resultado:</h2>
+            <div class="pet-card">
+              <p><strong>ID:</strong> ${pet.id}</p>
+              <p><strong>Nome:</strong> ${pet.nome}</p>
+              <p><strong>Tipo:</strong> ${pet.tipo}</p>
+            </div>`;
+        } else {
+          resultadoDiv.innerHTML = '<p>Pet não encontrado</p>';
+        }
+      } catch (error) {
+        console.error('Erro ao pesquisar pet:', error);
+        resultadoDiv.innerHTML = '<p>Erro ao pesquisar pet</p>';
+      }
+    }
+  </script>
+</body>
+</html>
